@@ -42,6 +42,9 @@ public class NettySocketIoServer implements InitializingBean, DisposableBean {
     @Autowired
     private JedisPool jedisPool;
 
+    @Autowired
+    private CacheHelper cacheHelper;
+
     @OnConnect
     public void onConnect(SocketIOClient client) {
         Jedis jedis=jedisPool.getResource();
@@ -116,7 +119,11 @@ public class NettySocketIoServer implements InitializingBean, DisposableBean {
 	public void chatEvent(SocketIOClient client, Map<String, Object> chatData) {
 
         log.info("发送聊天消息");
-		String userId = (String) chatData.get("userId");
+        // 限流check
+        String userId = (String) chatData.get("userId");
+        if (cacheHelper.limitFrequency("chat",Integer.valueOf(userId))) {
+            return;
+        }
 		String msg = (String) chatData.get("msg");
 		String toUserId= (String) chatData.get("toUserId");
 		String publishTime= DateHandle.currentDate();

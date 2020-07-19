@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author lidongming
  * @ClassName DirectMemoryReporter.java
- * @Description TODO
+ * @Description 用于排查netty内存泄漏问题
  * @createTime 2020年04月24日 18:25:00
  */
 @Slf4j
